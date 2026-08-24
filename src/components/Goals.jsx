@@ -113,6 +113,24 @@ export default function Goals({ data, onUpdate }) {
         </button>
       </div>
 
+      {goals.length === 0 ? (
+        <div className="bg-white p-12 rounded-2xl border border-slate-100 shadow-sm text-center flex flex-col items-center justify-center space-y-3">
+          <div className="p-4 bg-primary-50 text-primary-600 rounded-full">
+            <Target className="w-8 h-8" />
+          </div>
+          <h3 className="font-bold text-slate-800 text-lg">Nenhuma Meta Cadastrada</h3>
+          <p className="text-slate-500 text-sm max-w-sm">
+            Comece criando o seu primeiro objetivo financeiro (ex: Reserva de Emergência, Viagem, Eletrônicos) para começar a acompanhar o seu progresso.
+          </p>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="mt-2 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center justify-center gap-2 shadow-sm"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Criar Minha Primeira Meta</span>
+          </button>
+        </div>
+      ) : (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {goals.map((g) => {
           const progressPercent = Math.min(Math.round((g.current / g.target) * 100), 100);
@@ -212,6 +230,7 @@ export default function Goals({ data, onUpdate }) {
           );
         })}
       </div>
+      )}
 
       {/* Goal creation Modal Form */}
       {isModalOpen && (

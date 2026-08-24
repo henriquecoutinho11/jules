@@ -244,8 +244,12 @@ export default function Dashboard({ data, setActiveTab }) {
                 );
               })}
               {goals.length === 0 && (
-                <div className="text-center py-6 text-slate-400 text-sm">
-                  Nenhuma meta financeira definida.
+                <div className="flex flex-col items-center justify-center py-8 text-center space-y-2">
+                  <div className="p-3 bg-primary-50 text-primary-600 rounded-full">
+                    <Wallet className="w-6 h-6" />
+                  </div>
+                  <p className="text-slate-700 font-semibold text-sm">Nenhuma meta cadastrada</p>
+                  <p className="text-slate-400 text-xs max-w-xs">Crie metas para organizar suas economias e acompanhar seus objetivos.</p>
                 </div>
               )}
             </div>
@@ -299,8 +303,14 @@ export default function Dashboard({ data, setActiveTab }) {
               ))}
               {sortedTransactions.length === 0 && (
                 <tr>
-                  <td colSpan="4" className="text-center py-6 text-slate-400 text-sm">
-                    Nenhuma transação registrada ainda.
+                  <td colSpan="4" className="text-center py-10">
+                    <div className="flex flex-col items-center justify-center space-y-2">
+                      <div className="p-3 bg-slate-100 text-slate-500 rounded-full">
+                        <ArrowRightLeft className="w-5 h-5" />
+                      </div>
+                      <p className="text-slate-700 font-semibold text-sm">Nenhuma transação registrada ainda</p>
+                      <p className="text-slate-400 text-xs">Acesse a aba Transações para adicionar sua primeira receita ou despesa.</p>
+                    </div>
                   </td>
                 </tr>
               )}
