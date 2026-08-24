@@ -25,13 +25,30 @@ export default function Settings({ data, onUpdate }) {
     }
   };
 
-  // Import dynamic default mock data perfectly
+  // Import dynamic sample data generator if user wants simulation data
   const handleRestoreMockData = () => {
-    if (window.confirm("Deseja restaurar os dados de simulação padrão? Seus dados atuais serão substituídos.")) {
-      localStorage.removeItem("finances_data");
-      const freshlyLoadedMock = loadData();
-      onUpdate(freshlyLoadedMock);
-      alert("Dados de simulação restaurados com sucesso!");
+    if (window.confirm("Deseja carregar dados de simulação para testar o aplicativo? Seus dados atuais serão substituídos.")) {
+      const sampleMockData = {
+        transactions: [
+          { id: "t-1", description: "Salário Mensal", amount: 5500.0, type: "receita", category: "Salário", date: new Date().toISOString().split('T')[0] },
+          { id: "t-2", description: "Supermercado", amount: 350.5, type: "despesa", category: "Alimentação", date: new Date().toISOString().split('T')[0] },
+          { id: "t-3", description: "Aluguel", amount: 1200.0, type: "despesa", category: "Moradia", date: new Date().toISOString().split('T')[0] }
+        ],
+        budgets: [
+          { category: "Alimentação", limit: 800.0, spent: 350.5 },
+          { category: "Moradia", limit: 1500.0, spent: 1200.0 },
+          { category: "Transporte", limit: 400.0, spent: 0.0 },
+          { category: "Lazer", limit: 500.0, spent: 0.0 },
+          { category: "Saúde", limit: 300.0, spent: 0.0 },
+          { category: "Educação", limit: 600.0, spent: 0.0 },
+          { category: "Outros", limit: 300.0, spent: 0.0 }
+        ],
+        goals: [
+          { id: "g-1", title: "Reserva de Emergência", target: 10000.0, current: 4500.0, deadline: "2027-06-30", category: "Investimentos" }
+        ]
+      };
+      onUpdate(sampleMockData);
+      alert("Dados de simulação carregados com sucesso!");
     }
   };
 

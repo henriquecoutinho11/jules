@@ -48,9 +48,6 @@ export default function Transactions({ data, onUpdate }) {
 
     const value = parseFloat(amount);
     let updatedTransactions = [...data.transactions];
-    const prevCategory = editItem ? editItem.category : null;
-    const prevAmount = editItem ? editItem.amount : 0;
-    const prevType = editItem ? editItem.type : null;
 
     if (editItem) {
       // Edit
@@ -70,22 +67,16 @@ export default function Transactions({ data, onUpdate }) {
       updatedTransactions.push(newTransaction);
     }
 
-    // Recalculate Budgets spent
-    let updatedBudgets = [...data.budgets];
-
-    // First, restore previous transaction spent values from its previous budget if it was an expense
-    if (editItem && prevType === 'despesa') {
-      updatedBudgets = updatedBudgets.map(b =>
-        b.category === prevCategory ? { ...b, spent: Math.max(0, Number((b.spent - prevAmount).toFixed(2))) } : b
-      );
-    }
-
-    // Second, calculate the new expense into appropriate budget category if type is despesa
-    if (type === 'despesa') {
-      updatedBudgets = updatedBudgets.map(b =>
-        b.category === category ? { ...b, spent: Number((b.spent + value).toFixed(2)) } : b
-      );
-    }
+    // Recalculate all budget spent amounts dynamically based on updated transactions
+    const updatedBudgets = data.budgets.map((b) => {
+      const categorySpent = updatedTransactions
+        .filter((t) => t.type === 'despesa' && t.category === b.category)
+        .reduce((sum, t) => sum + Number(t.amount), 0);
+      return {
+        ...b,
+        spent: Number(categorySpent.toFixed(2))
+      };
+    });
 
     onUpdate({
       ...data,
@@ -99,17 +90,18 @@ export default function Transactions({ data, onUpdate }) {
   // Handle Delete
   const handleDelete = (id) => {
     if (window.confirm("Deseja realmente excluir esta transação?")) {
-      const targetTransaction = data.transactions.find(t => t.id === id);
       const updatedTransactions = data.transactions.filter((t) => t.id !== id);
 
-      let updatedBudgets = [...data.budgets];
-      if (targetTransaction && targetTransaction.type === 'despesa') {
-        updatedBudgets = updatedBudgets.map(b =>
-          b.category === targetTransaction.category
-            ? { ...b, spent: Math.max(0, Number((b.spent - targetTransaction.amount).toFixed(2))) }
-            : b
-        );
-      }
+      // Recalculate all budget spent amounts dynamically
+      const updatedBudgets = data.budgets.map((b) => {
+        const categorySpent = updatedTransactions
+          .filter((t) => t.type === 'despesa' && t.category === b.category)
+          .reduce((sum, t) => sum + Number(t.amount), 0);
+        return {
+          ...b,
+          spent: Number(categorySpent.toFixed(2))
+        };
+      });
 
       onUpdate({
         ...data,
